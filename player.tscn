@@ -1,0 +1,126 @@
+[gd_scene load_steps=20 format=3 uid="uid://2yvltk3y6owd"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_exm1k"]
+[ext_resource type="Texture2D" uid="uid://dqvb4vedwcdkg" path="res://assets/sprites/greenTank_1hp_1.png" id="2_5jiph"]
+[ext_resource type="Texture2D" uid="uid://dwrfdp84ttnt2" path="res://assets/sprites/greenTank_0hp.png" id="2_ftnan"]
+[ext_resource type="Texture2D" uid="uid://32gkysfd6wuo" path="res://assets/sprites/greenTank_1hp_2.png" id="3_xdn65"]
+[ext_resource type="Texture2D" uid="uid://dmadc4lsx7x7h" path="res://assets/sprites/greenTank_2hp_1.png" id="4_5ojyy"]
+[ext_resource type="Texture2D" uid="uid://dwdvo75tcpq17" path="res://assets/sprites/greenTank_2hp_2.png" id="5_0fk4w"]
+[ext_resource type="Texture2D" uid="uid://bdoffidmeu5ib" path="res://assets/sprites/greenTank_3hp_1.png" id="6_giggv"]
+[ext_resource type="Texture2D" uid="uid://dpmr46gxyb14c" path="res://assets/sprites/greenTank_3hp_2.png" id="7_opa1m"]
+[ext_resource type="Texture2D" uid="uid://fdx7t67xje37" path="res://assets/sprites/kaboom1.png" id="9_bntvt"]
+[ext_resource type="Texture2D" uid="uid://v7bdv0behq7h" path="res://assets/sprites/kaboom2.png" id="9_u0v3m"]
+[ext_resource type="Texture2D" uid="uid://dhvednwhxisnh" path="res://assets/sprites/kaboom3.png" id="11_6a0e0"]
+[ext_resource type="Texture2D" uid="uid://c5vhftfucoc8q" path="res://assets/sprites/kaboom4.png" id="12_exid1"]
+[ext_resource type="Texture2D" uid="uid://d3wokxtqxkj1r" path="res://assets/sprites/kaboom5.png" id="13_2tc4o"]
+[ext_resource type="Texture2D" uid="uid://dscv7r4r7vimo" path="res://assets/sprites/kaboom6.png" id="14_yqb37"]
+[ext_resource type="AudioStream" uid="uid://cr6cxoc100glh" path="res://assets/sfx/atari_boom.wav" id="15_va0eu"]
+[ext_resource type="AudioStream" uid="uid://c2eobtm6ivqjk" path="res://assets/sfx/atari_boom5.wav" id="16_qe26x"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_60vu0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ftnan")
+}],
+"loop": false,
+"name": &"0hp",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_5jiph")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_xdn65")
+}],
+"loop": true,
+"name": &"1hp",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_5ojyy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_0fk4w")
+}],
+"loop": true,
+"name": &"2hp",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_giggv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_opa1m")
+}],
+"loop": true,
+"name": &"3hp",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_05a4b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_bntvt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_u0v3m")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_6a0e0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_exid1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_2tc4o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_yqb37")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"red",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2x0h2"]
+size = Vector2(13, 16)
+
+[node name="Player" type="Area2D"]
+position = Vector2(62, 50)
+script = ExtResource("1_exm1k")
+
+[node name="TankSprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -1.66893e-06)
+sprite_frames = SubResource("SpriteFrames_60vu0")
+animation = &"3hp"
+offset = Vector2(0, 1.66893e-06)
+
+[node name="ExplosionSprite" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_05a4b")
+animation = &"red"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 0)
+shape = SubResource("RectangleShape2D_2x0h2")
+
+[node name="InvincibilityTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
+[node name="HitSfx" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("15_va0eu")
+
+[node name="FinalHitSfx" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("16_qe26x")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
